@@ -5,6 +5,8 @@ local serverdefs = include( "modules/serverdefs" )
 local scroll_text = include("hud/scroll_text")
 local cdefs = include("client_defs")
 
+local secondStage = false
+
 local function init( modApi )
     modApi.requirements = {"Sim Constructor"}
     modApi:addGenerationOption("four_agent_start", "FOUR AGENT START" , "Allows you to select up to 4 agents by displaying the agent selection screen twice", {enabled = false} )
@@ -21,27 +23,29 @@ local function load( modApi, options )
         return false
     end
 
-    function teamPreview:onSecondClickCampaign()
-        for k1,v1 in pairs(self._preselectedAgents) do
-            if not has_value(self._selectedAgents, v1) then
-                self._selectedAgents[#self._selectedAgents+1] = v1
-                self._selectedLoadouts[#self._selectedLoadouts+1] = self._preselectedLoadouts[k1]
-            end
-        end
-        self:onClickCampaign()
-    end
-
     function teamPreview:onFirstClickCampaign()
-        self._preselectedAgents = {}
-        self._preselectedLoadouts = {}
-        for k,v in pairs(self._selectedAgents) do
-            self._preselectedAgents[k] = v
+        if not secondStage then
+            self._preselectedAgents = {}
+            self._preselectedLoadouts = {}
+            for k,v in pairs(self._selectedAgents) do
+                self._preselectedAgents[k] = v
+            end
+            for k,v in pairs(self._selectedLoadouts) do
+                self._preselectedLoadouts[k] = v
+            end
+            self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
+            secondStage = true
+            return
+        else
+            for k1,v1 in pairs(self._preselectedAgents) do
+                if not has_value(self._selectedAgents, v1) then
+                    self._selectedAgents[#self._selectedAgents+1] = v1
+                    self._selectedLoadouts[#self._selectedLoadouts+1] = self._preselectedLoadouts[k1]
+                end
+            end
+            secondStage = false
+            self:onClickCampaign()
         end
-        for k,v in pairs(self._selectedLoadouts) do
-            self._preselectedLoadouts[k] = v
-        end
-        self._panel.binder.acceptBtn.onClick = util.makeDelegate( nil,  self.onSecondClickCampaign, self)
-        self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
     end
 
     -- This is a mostly unchanged function from Sim Constructor, and is not covered by the mod license.
