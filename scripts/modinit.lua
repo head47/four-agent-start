@@ -43,6 +43,7 @@ local function load( modApi, options )
         self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
     end
 
+    -- This is a mostly unchanged function from Sim Constructor, and is not covered by the mod license.
     function teamPreview:initScreen()
         self.screen = mui.createScreen( "team_preview_screen.lua" )
         mui.activateScreen( self.screen )
