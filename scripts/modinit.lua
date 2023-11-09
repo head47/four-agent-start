@@ -6,6 +6,7 @@ local scroll_text = include("hud/scroll_text")
 local cdefs = include("client_defs")
 
 local function init( modApi )
+    modApi.requirements = {"Sim Constructor"}
     modApi:addGenerationOption("four_agent_start", "FOUR AGENT START" , "Allows you to select up to 4 agents by displaying the agent selection screen twice", {enabled = false} )
 end
 
