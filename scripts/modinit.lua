@@ -6,6 +6,7 @@ local scroll_text = include("hud/scroll_text")
 local cdefs = include("client_defs")
 
 local secondStage = false
+local loaded = false
 
 local function init( modApi )
     modApi.requirements = {"Sim Constructor"}
@@ -13,52 +14,54 @@ local function init( modApi )
 end
 
 local function load( modApi, options )
-    local onClickCampaignOld = teamPreview.onClickCampaign
-    local initScreenOld = teamPreview.initScreen
+    if not loaded then
+        local onClickCampaignOld = teamPreview.onClickCampaign
+        local initScreenOld = teamPreview.initScreen
 
-    function has_value(tab, val)
-        for index, value in pairs(tab) do
-            if value == val then
-                return true
+        function has_value(tab, val)
+            for index, value in pairs(tab) do
+                if value == val then
+                    return true
+                end
             end
+        
+            return false
         end
-    
-        return false
-    end
 
-    function teamPreview:onClickCampaign()
-        if options.four_agent_start and options.four_agent_start.enabled then
-            if not secondStage then
-                self._preselectedAgents = {}
-                self._preselectedLoadouts = {}
-                for k,v in pairs(self._selectedAgents) do
-                    self._preselectedAgents[k] = v
-                end
-                for k,v in pairs(self._selectedLoadouts) do
-                    self._preselectedLoadouts[k] = v
-                end
-                self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
-                secondStage = true
-                return
-            else
-                for k1,v1 in pairs(self._preselectedAgents) do
-                    if not has_value(self._selectedAgents, v1) then
-                        self._selectedAgents[#self._selectedAgents+1] = v1
-                        self._selectedLoadouts[#self._selectedLoadouts+1] = self._preselectedLoadouts[k1]
+        function teamPreview:onClickCampaign()
+            if options.four_agent_start and options.four_agent_start.enabled then
+                if not secondStage then
+                    self._preselectedAgents = {}
+                    self._preselectedLoadouts = {}
+                    for k,v in pairs(self._selectedAgents) do
+                        self._preselectedAgents[k] = v
                     end
+                    for k,v in pairs(self._selectedLoadouts) do
+                        self._preselectedLoadouts[k] = v
+                    end
+                    self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
+                    secondStage = true
+                    return
+                else
+                    for k1,v1 in pairs(self._preselectedAgents) do
+                        if not has_value(self._selectedAgents, v1) then
+                            self._selectedAgents[#self._selectedAgents+1] = v1
+                            self._selectedLoadouts[#self._selectedLoadouts+1] = self._preselectedLoadouts[k1]
+                        end
+                    end
+                    secondStage = false
                 end
-                secondStage = false
             end
+            onClickCampaignOld(self)
         end
-        onClickCampaignOld(self)
-    end
 
-    function teamPreview:initScreen()
-        initScreenOld(self)
-        if options.four_agent_start and options.four_agent_start.enabled then
-            self._panel.binder.acceptBtn:setText("> BEGIN (0/4)")
-        else
-            self._panel.binder.acceptBtn:setText("> BEGIN")
+        function teamPreview:initScreen()
+            initScreenOld(self)
+            if options.four_agent_start and options.four_agent_start.enabled then
+                self._panel.binder.acceptBtn:setText("> BEGIN (0/4)")
+            else
+                self._panel.binder.acceptBtn:setText("> BEGIN")
+            end
         end
     end
 end
