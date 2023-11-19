@@ -7,6 +7,8 @@ local cdefs = include("client_defs")
 
 local secondStage = false
 local loaded = false
+local onClickCampaignOld
+local initScreenOld
 
 local function init( modApi )
     modApi.requirements = {"Sim Constructor"}
@@ -14,10 +16,11 @@ local function init( modApi )
 end
 
 local function load( modApi, options )
-    if not loaded then
-        local onClickCampaignOld = teamPreview.onClickCampaign
-        local initScreenOld = teamPreview.initScreen
-
+    if not loaded then  -- loading on game start
+        onClickCampaignOld = teamPreview.onClickCampaign
+        initScreenOld = teamPreview.initScreen
+        loaded = true
+    else                -- loading on campaign start
         function has_value(tab, val)
             for index, value in pairs(tab) do
                 if value == val then
@@ -54,18 +57,19 @@ local function load( modApi, options )
         end
 
         function teamPreview:initScreen()
+            log:write("Executing modified initScreen")
             initScreenOld(self)
             if options.four_agent_start and options.four_agent_start.enabled then
+                log:write("4AS selected")
                 secondStage = false
                 self._preselectedAgents = {}
                 self._preselectedLoadouts = {}
                 self._panel.binder.acceptBtn:setText("> BEGIN (0/4)")
             else
+                log:write("4AS not selected!")
                 self._panel.binder.acceptBtn:setText("> BEGIN")
             end
         end
-
-        loaded = true
     end
 end
 
