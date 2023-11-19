@@ -63,6 +63,8 @@ local function load( modApi, options )
                 self._panel.binder.acceptBtn:setText("> BEGIN")
             end
         end
+
+        loaded = true
     end
 end
 
