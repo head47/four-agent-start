@@ -31,8 +31,6 @@ local function load( modApi, options )
         function teamPreview:onClickCampaign()
             if options.four_agent_start and options.four_agent_start.enabled then
                 if not secondStage then
-                    self._preselectedAgents = {}
-                    self._preselectedLoadouts = {}
                     for k,v in pairs(self._selectedAgents) do
                         self._preselectedAgents[k] = v
                     end
@@ -58,6 +56,9 @@ local function load( modApi, options )
         function teamPreview:initScreen()
             initScreenOld(self)
             if options.four_agent_start and options.four_agent_start.enabled then
+                secondStage = false
+                self._preselectedAgents = {}
+                self._preselectedLoadouts = {}
                 self._panel.binder.acceptBtn:setText("> BEGIN (0/4)")
             else
                 self._panel.binder.acceptBtn:setText("> BEGIN")
