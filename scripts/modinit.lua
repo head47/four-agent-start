@@ -40,7 +40,7 @@ local function load( modApi, options )
                     for k,v in pairs(self._selectedLoadouts) do
                         self._preselectedLoadouts[k] = v
                     end
-                    self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
+                    self._panel.binder.acceptBtn:setText(STRINGS.SCREENS.STR_851442695 .. [[ (2/4)]])
                     secondStage = true
                     return
                 else
@@ -64,10 +64,10 @@ local function load( modApi, options )
                 secondStage = false
                 self._preselectedAgents = {}
                 self._preselectedLoadouts = {}
-                self._panel.binder.acceptBtn:setText("> BEGIN (0/4)")
+                self._panel.binder.acceptBtn:setText(STRINGS.SCREENS.STR_851442695 .. [[ (0/4)]])
             else
                 log:write("4AS not selected!")
-                self._panel.binder.acceptBtn:setText("> BEGIN")
+                self._panel.binder.acceptBtn:setText(STRINGS.SCREENS.STR_851442695)
             end
         end
     end
