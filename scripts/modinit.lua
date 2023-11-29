@@ -1,10 +1,3 @@
-local teamPreview = include( "states/state-team-preview" )
-local util = include("client_util")
-local mui = include( "mui/mui" )
-local serverdefs = include( "modules/serverdefs" )
-local scroll_text = include("hud/scroll_text")
-local cdefs = include("client_defs")
-
 local secondStage = false
 local loaded = false
 local onClickCampaignOld
@@ -16,6 +9,8 @@ local function init( modApi )
 end
 
 local function load( modApi, options )
+    local teamPreview = include( "states/state-team-preview" )
+
     if not loaded then  -- loading on game start
         onClickCampaignOld = teamPreview.onClickCampaign
         initScreenOld = teamPreview.initScreen
