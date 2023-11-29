@@ -1,9 +1,4 @@
-local teamPreview = include( "states/state-team-preview" )
 local util = include("client_util")
-local mui = include( "mui/mui" )
-local serverdefs = include( "modules/serverdefs" )
-local scroll_text = include("hud/scroll_text")
-local cdefs = include("client_defs")
 
 local secondStage = false
 local loaded = false
@@ -16,6 +11,12 @@ local function init( modApi )
 end
 
 local function load( modApi, options )
+	local serverdefs = include( "modules/serverdefs" )
+	local teamPreview = include( "states/state-team-preview" )
+	local scroll_text = include("hud/scroll_text")
+	local mui = include( "mui/mui" )
+	local cdefs = include("client_defs")
+
     if not loaded then  -- loading on game start
         onClickCampaignOld = teamPreview.onClickCampaign
         initScreenOld = teamPreview.initScreen
@@ -40,7 +41,7 @@ local function load( modApi, options )
                     for k,v in pairs(self._selectedLoadouts) do
                         self._preselectedLoadouts[k] = v
                     end
-                    self._panel.binder.acceptBtn:setText(STRINGS.SCREENS.STR_851442695 .. [[ (2/4)]])
+                    self._panel.binder.acceptBtn:setText("> BEGIN (2/4)")
                     secondStage = true
                     return
                 else
@@ -57,17 +58,17 @@ local function load( modApi, options )
         end
 
         function teamPreview:initScreen()
-            log:write("4AS: executing modified initScreen")
+            log:write("Executing modified initScreen")
             initScreenOld(self)
             if options.four_agent_start and options.four_agent_start.enabled then
                 log:write("4AS selected")
                 secondStage = false
                 self._preselectedAgents = {}
                 self._preselectedLoadouts = {}
-                self._panel.binder.acceptBtn:setText(STRINGS.SCREENS.STR_851442695 .. [[ (0/4)]])
+                self._panel.binder.acceptBtn:setText("> BEGIN (0/4)")
             else
                 log:write("4AS not selected!")
-                self._panel.binder.acceptBtn:setText(STRINGS.SCREENS.STR_851442695)
+                self._panel.binder.acceptBtn:setText("> BEGIN")
             end
         end
     end
