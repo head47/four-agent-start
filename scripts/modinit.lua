@@ -57,7 +57,7 @@ local function load( modApi, options )
         end
 
         function teamPreview:initScreen()
-            log:write("Executing modified initScreen")
+            log:write("4AS: executing modified initScreen")
             initScreenOld(self)
             if options.four_agent_start and options.four_agent_start.enabled then
                 log:write("4AS selected")
